@@ -1,0 +1,5 @@
+{
+  "name": "GreenBot",
+  "description": "A chatbot web application by GreenGamesStudio with Google Gemini API integration for chat and image generation, styled with a green-themed design.",
+  "requestFramePermissions": []
+}
