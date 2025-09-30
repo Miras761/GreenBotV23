@@ -1,8 +1,13 @@
 import { GoogleGenAI, GenerateContentResponse } from "@google/genai";
 
-// The API key is now sourced directly from environment variables.
-// You should set API_KEY in your Vercel deployment.
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+const getAiClient = () => {
+  const apiKey = localStorage.getItem('gemini_api_key');
+  if (!apiKey) {
+    throw new Error("API key not found. Please set it in the application.");
+  }
+  return new GoogleGenAI({ apiKey });
+};
+
 
 const SYSTEM_INSTRUCTION = "You are GreenBot, a helpful assistant from GreenGamesStudio. When asked about your model, you must reply that you are GreenFlash2.5.";
 
@@ -27,6 +32,7 @@ export const generateTextWithImage = async (
   image: File
 ): Promise<string> => {
   try {
+    const ai = getAiClient();
     const imagePart = await fileToGenerativePart(image);
     const textPart = { text: prompt };
 
@@ -49,6 +55,7 @@ export const generateText = async (
   prompt: string
 ): Promise<string> => {
     try {
+        const ai = getAiClient();
         const response: GenerateContentResponse = await ai.models.generateContent({
           model: 'gemini-2.5-flash',
           contents: prompt,
@@ -68,6 +75,7 @@ export const generateImage = async (
   prompt: string
 ): Promise<string> => {
   try {
+    const ai = getAiClient();
     const response = await ai.models.generateImages({
       model: 'imagen-4.0-generate-001',
       prompt: prompt,
