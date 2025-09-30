@@ -2,8 +2,6 @@ import React, { useState } from 'react';
 import { ChatInterface } from './components/ChatInterface';
 import { ImageGenerator } from './components/ImageGenerator';
 import { LogoIcon } from './components/icons';
-import { useApiKey } from './hooks/useApiKey';
-import { ApiKeyModal } from './components/ApiKeyModal';
 
 enum Tab {
   Chat,
@@ -12,11 +10,6 @@ enum Tab {
 
 const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState<Tab>(Tab.Chat);
-  const { apiKey, setApiKey } = useApiKey();
-
-  if (!apiKey) {
-    return <ApiKeyModal onSubmit={setApiKey} />;
-  }
 
   const TabButton = ({
     tab,

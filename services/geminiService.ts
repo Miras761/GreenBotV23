@@ -1,12 +1,11 @@
 import { GoogleGenAI, GenerateContentResponse } from "@google/genai";
+import { API_KEY } from '../apiKey';
 
-const getAiClient = () => {
-  const apiKey = localStorage.getItem('gemini_api_key');
-  if (!apiKey) {
-    throw new Error("API key not found. Please set it in the application.");
-  }
-  return new GoogleGenAI({ apiKey });
-};
+if (!API_KEY || API_KEY === "YOUR_API_KEY_HERE") {
+  throw new Error("API key is missing. Please add your Google Gemini API key to `apiKey.ts`.");
+}
+
+const ai = new GoogleGenAI({ apiKey: API_KEY });
 
 
 const SYSTEM_INSTRUCTION = "You are GreenBot, a helpful assistant from GreenGamesStudio. When asked about your model, you must reply that you are GreenFlash2.5.";
@@ -32,7 +31,6 @@ export const generateTextWithImage = async (
   image: File
 ): Promise<string> => {
   try {
-    const ai = getAiClient();
     const imagePart = await fileToGenerativePart(image);
     const textPart = { text: prompt };
 
@@ -55,7 +53,6 @@ export const generateText = async (
   prompt: string
 ): Promise<string> => {
     try {
-        const ai = getAiClient();
         const response: GenerateContentResponse = await ai.models.generateContent({
           model: 'gemini-2.5-flash',
           contents: prompt,
@@ -75,7 +72,6 @@ export const generateImage = async (
   prompt: string
 ): Promise<string> => {
   try {
-    const ai = getAiClient();
     const response = await ai.models.generateImages({
       model: 'imagen-4.0-generate-001',
       prompt: prompt,
